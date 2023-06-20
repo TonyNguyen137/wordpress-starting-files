@@ -1,0 +1,288 @@
+===============
+Gerneral
+===============
+
+// echos Titelseite der Website. 
+// Wp-admin -> Einstellung
+
+bloginfo($string)
+
+
+// title and content of posts
+// without the while loop, you get the latest post-title & post-content
+
+the_title();
+the_content();
+
+// the_title returns the title of the passed posts ID;
+get_the_title($Int:ID)
+
+//deprecated
+//is meant to be used in your title tag in the head section.
+//Some plugin or even you can change its behaviour by using a filter. (plugin like Yoast SEO or WordPress SEO optimise its value).
+
+wp_title()
+
+
+// add lang Attribute to <html> tag, the language depends on WP setting.
+
+<html <?php language_attributes() ?>>
+
+// add charset value to meta tag
+<meta charset="<?php bloginfo("chartset")?>">
+
+
+// add body class to <body> tag
+// this function gives you information as classes about the page youre viewing,
+// with those classes you can manipulate the viewed page with css
+
+<body <?php body_class() ?>>
+
+
+
+
+// famous while loop
+// the_Post() iterate the post index in the loop
+
+
+<?php
+
+while (have_posts()) {
+    the_post();
+    ?>
+
+    <h2>
+        <?php the_title() ?>
+    </h2>
+
+    <?php
+}
+?>
+
+
+// Displays the permalink for the current post.
+// Displays the permalink for the passed Posts ID.
+// without the while loop, you get the latest posts' permalink
+
+
+the_permalink($Int:ID)
+
+
+
+// get Header and Footer code from header.php and footer.php files
+
+get_header();
+get_footer();
+
+// this function lets WordPress be in control of our head section.
+// if we install some plugins and those plugins need to load css files,
+// So this function lets WordPress have the final say and loads whatever
+// it needs to load in our head
+// use functions.php file to load your css file.
+
+wp_head();
+
+// this functions will be placed right before the closing </body> tag
+// this function lets WordPress loads js script files.
+// if we install some plugins and those plugins need to load js files,
+// So this function lets WordPress have the final say and loads whatever it needs
+// use functions.php file to load your js file.
+
+...
+wp_footer();
+</body>
+</html>
+
+
+//Get path to your theme folder
+get_theme_file_uri();
+
+
+//add dynamic <title> tag to every page
+// add this to functions.php
+
+function callback() {
+ add_theme_support("title-tag");
+}
+
+add_action("after_setup_theme", "callback");
+
+
+
+// displays root folder path
+
+site_url();
+
+
+
+=====================
+Relationship
+=====================
+
+//returns the unique ID of the viewed page
+get_the_ID();
+
+//returns the Parent ID of the viewed page
+//if $id is 0, find the parent id of the current page
+wp_get_post_parent_id($Int:id);
+
+//important functions for relationships:
+// the_title returns the title of the passed posts ID;
+
+get_the_title($Int:ID)
+
+// Displays the permalink for the passed Posts ID.
+
+the_permalink($Int:ID)
+
+//list all pages
+
+wp_list_pages($Array:options);
+
+//Example options
+
+            wp_list_pages(
+                array(
+                    'title_li' => null,
+                    "child_of" => 16,
+
+                )
+            );
+// Example combination with if
+
+            if ($theParent) {
+                $findChildrenOf = $theParent;
+            } else {
+                $findChildrenOf = get_the_ID();
+            }
+
+            wp_list_pages(
+                array(
+                    'title_li' => null,
+                    "child_of" => $findChildrenOf,
+
+		    // must set the order in dashboard to work
+		    "sort_column => "menu_order"
+
+                )
+            );
+
+
+
+// returns all pages as array;
+get_pages()
+
+example:
+
+    <?php
+    $testArray = get_pages(
+        array(
+            "child_of" => get_the_ID(),
+        )
+    );
+
+
+// is the slug in the url? returns boolean
+
+is_page("about-us")
+
+example:
+          <li <?php if (is_page("about-us"))
+                            echo "class='current-menu-item'" ?>><a
+                                    href=" <?php echo site_url("/about-us") ?> ">About Us</a></li>
+
+===================================
+supports
+===================================
+
+//activate appearance - menu
+function callback()
+{
+    register_nav_menu($String:locationIdentifier, $String:descrition);
+
+}
+
+add_action("after_setup_theme", "callback");
+
+
+// in front end
+wp_nav_menu(
+            array(
+             "theme_location" => '$locationIdentifier',
+            )
+)
+
+
+
+
+=====================
+Blog
+=====================
+//returns author name
+//change author name in dashboard - User - Nickname
+the_author_posts_link()
+
+
+// time & category
+<?php the_time("j.n.y") ?> 
+
+// echos category name, change in dashboard - posts - category 
+single_cat_title();
+
+
+// setting in dashboard - posts - category, else it wont work
+<?php echo get_the_category_list($String:seprator) ?>
+
+
+//create pagination
+//By default, WP will show your ten most recent blog posts, you can change in setting - read
+// place it in index.js
+    echo paginate_links();
+
+
+//are you viewing a category page?
+is_category();
+
+// are you viewing an author category page?
+is_author();
+
+// echos authors name
+the_author();23:27 18.06.2023
+
+// echos the info about the clicked author / category
+the_archive_title()
+
+
+// echos users biography, muin User - Biography
+// echos categorys description, must setup in Dashboard - posts - categories - description
+
+the_archive_description()
+
+
+=====================
+Query
+=====================
+
+  $homepagePosts = new WP_Query(
+                array(
+                    "posts_per_page" => 2,
+                    "post_type" => "page"
+
+                )
+            );
+
+
+//limit words
+echo wp_trim_words(get_the_content(), 15)
+
+
+// this will reset different WP data and global variables back to
+// the state it was in
+wp_reset_postdata();
+
+
+
+//get the posty type of current viewd page
+get_post_type()
+
+

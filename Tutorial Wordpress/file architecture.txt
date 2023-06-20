@@ -1,0 +1,109 @@
+/*
+Homepage
+*/
+front-page.php
+need to set up in dashboard, setting - read - static website - homepage: home, Postspage: Blog
+
+
+/*
+blog listing screen template
+*/
+index.js
+
+/*
+for Post post type
+All posts on your WordPress site will be formatted using the single.php template.
+The single.php file in WP is specifically designed to display a single post, so by default
+the while loop in single.php will only display one post. 
+If you want to display multiple posts you should use a different template file such as archive.php or index.php
+
+If you want to mantain 100% compatibility with all plugins, you need to use the loop on single.php.
+The reason is that there are loop_start and loop_end actions which get triggered on the first and last call
+to have_posts();
+*/
+
+single.php
+
+
+/*
+For categories
+*/
+archiv.php
+
+
+/*
+For Post site type
+*/
+
+page.php
+
+
+/*
+For Header
+*/
+
+header.php
+
+// In this file comes the upper html boilerplate part:
+// wp_head() let WP controls the head section, Wp loads needed files.
+<!Doctype html>
+<html>
+ <head>
+   <?php wp_head(); ?>
+ </head>
+ <body>
+
+/*
+For Footer
+*/
+
+footer.php
+
+// In this file comes the lower html boilerplate part:
+// wp_footer() let WP loads needed js files right before the closing </body> tag
+
+wp_footer();
+</body>
+</html>
+
+
+/*
+for Scripts and css files.
+*/
+
+functions.php
+
+// by using this function, we give WP instructions
+
+add_action($what_type_of_istruction, $callback);
+
+//load your css
+
+function callback() {
+    wp_enqueue_style("any_name", get_stylesheet_uri());
+    // OR use this instead of get_stylesheet_uri();
+    get_theme_file_uri($relative_path) 
+	
+}
+
+add_action("wp_enqueue_scripts", "$callback");
+
+
+// load external links like bootstrap, icons, google font etc
+// add in the callback this line, links starts with "//..." and not "http:....."
+
+function callback() {
+   ...
+   wp_enqueue_style("font-awesome", "//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
+   ...
+	
+}
+
+//load js file
+// add to the callback func of add_action();
+
+wp_enqueue_script("any_name", get_theme_file_uri("/build/index.js"), $array($StringDependency), $StringVersion, $BooleanLoadB4BodyTag);
+
+example:
+wp_enqueue_script("main-university-js", get_theme_file_uri("/build/index.js"), array("jquery"), "1.0", true);
+
